@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import quickSort from './quicksort'
-import shuffle from 'lodash/shuffle'
-import EntityList from './components/List'
-import styled from 'styled-components'
-import './App.css'
+import React, {Component} from "react"
+import quickSort from "./quicksort"
+import shuffle from "lodash/shuffle"
+import EntityList from "./components/List"
+import styled from "styled-components"
+import "./App.css"
 
 // https://www.nczonline.net/blog/tag/computer-science/
 
@@ -35,7 +35,7 @@ const getRandomNumberBetweenXandY = (x, y) => {
 const getUnsortedListByLength = len => {
   const res = []
   while (res.length - 1 < len) {
-    res.push(getRandomNumberBetweenXandY(1, len + 1))
+    res.push(getRandomNumberBetweenXandY(1, Math.max(len + 1, 10)))
   }
   return res
 }
@@ -47,12 +47,7 @@ const UNSORTED_LIST_WITH_ID = UNSORTED_LIST.map((item, index) => ({
   id: index,
 }))
 
-const transformToDisplayed = originalList => ({
-  leftIndex,
-  rightIndex,
-  pivotIndex,
-  items,
-}) => {
+const transformToDisplayed = originalList => ({leftIndex, rightIndex, pivotIndex, items}) => {
   return items.map((item, index) => ({
     isLeftIndex: leftIndex === index,
     isRightIndex: rightIndex === index,
@@ -63,7 +58,7 @@ const transformToDisplayed = originalList => ({
 }
 
 const initialState = {
-  quickSortGen: quickSort({ items: UNSORTED_LIST_WITH_ID.slice() }),
+  quickSortGen: quickSort({items: UNSORTED_LIST_WITH_ID.slice()}),
   leftIndex: null,
   rightIndex: null,
   items: transformToDisplayed(UNSORTED_LIST_WITH_ID)({
@@ -84,14 +79,14 @@ const getNewSliceForState = (prevState, newList) => ({
     items: newList,
     pivotIndex: null,
   }),
-  quickSortGen: quickSort({ items: newList.slice() }),
+  quickSortGen: quickSort({items: newList.slice()}),
 })
 
 class App extends Component {
   state = initialState
 
   step = () => {
-    const { value, done } = this.state.quickSortGen.next()
+    const {value, done} = this.state.quickSortGen.next()
     const displayedItems = transformToDisplayed(this.state.items)(value)
     return this.setState({
       ...this.state,
@@ -104,7 +99,7 @@ class App extends Component {
   restart = () => {
     this.setState({
       ...initialState,
-      quickSortGen: quickSort({ items: UNSORTED_LIST_WITH_ID.slice() }),
+      quickSortGen: quickSort({items: UNSORTED_LIST_WITH_ID.slice()}),
     })
   }
 
@@ -128,18 +123,14 @@ class App extends Component {
   }
 
   render() {
-    const { done, inProgress } = this.state
+    const {done, inProgress} = this.state
     const clickHandler = done ? this.restart : this.step
     return (
       <AppWrapper>
         <div>
           <ButtonWrapper>
-            <StyledButton onClick={clickHandler}>
-              {done ? 'Restart' : 'Step forward'}
-            </StyledButton>
-            {!inProgress && (
-              <StyledButton onClick={this.shuffle}>Shuffle</StyledButton>
-            )}
+            <StyledButton onClick={clickHandler}>{done ? "Restart" : "Step forward"}</StyledButton>
+            {!inProgress && <StyledButton onClick={this.shuffle}>Shuffle</StyledButton>}
             {/* {!inProgress && (
               <StyledButton onClick={this.addItem}>Add item</StyledButton>
             )} */}
