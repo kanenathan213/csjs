@@ -30,35 +30,13 @@ class Entity extends React.Component {
   render() {
     const { entity } = this.props
     return (
-      <Wrapper data-is-index={entity.isIndex} key={entity.id}>
+      <Wrapper data-is-index={entity.isIndex}>
         <StyledEntity
           data-is-index={entity.isIndex}
           data-is-pivot={entity.isPivot}
         >
           {entity.datum}
         </StyledEntity>
-        <div>
-          {entity.isPivot && <div>Pivot</div>}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {entity.isLeftIndex && (
-              <div style={{ color: 'blue' }}>
-                <div>&uarr;</div>
-                <div>
-                  Left<br />index
-                </div>
-              </div>
-            )}
-            {entity.isRightIndex && (
-              <div style={{ color: 'green' }}>
-                {' '}
-                <div>&uarr;</div>
-                <div>
-                  Right<br />index
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
       </Wrapper>
     )
   }

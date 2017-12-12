@@ -6,7 +6,7 @@ function swap(items, leftIndex, rightIndex) {
 
 function* partition(items, leftIndex, rightIndex) {
   const pivotIndex = Math.floor((rightIndex + leftIndex) / 2)
-  const pivotValue = items[pivotIndex]
+  const pivotValue = items[pivotIndex].value
   let i = leftIndex
   let j = rightIndex
 
@@ -18,7 +18,7 @@ function* partition(items, leftIndex, rightIndex) {
   }
 
   while (i <= j) {
-    while (items[i] < pivotValue) {
+    while (items[i].value < pivotValue) {
       i++
       yield {
         items,
@@ -28,7 +28,7 @@ function* partition(items, leftIndex, rightIndex) {
       }
     }
 
-    while (items[j] > pivotValue) {
+    while (items[j].value > pivotValue) {
       j--
       yield {
         items,
@@ -39,7 +39,6 @@ function* partition(items, leftIndex, rightIndex) {
     }
 
     if (i <= j) {
-      console.log('swapping')
       swap(items, i, j)
       yield {
         items,
@@ -73,7 +72,8 @@ function* partition(items, leftIndex, rightIndex) {
   return i
 }
 
-function* quickSort(items, leftIndexArg, rightIndexArg) {
+function* quickSort(args) {
+  const { items, leftIndexArg, rightIndexArg } = args
   let index
   const leftIndex = typeof leftIndexArg === 'number' ? leftIndexArg : 0
   const rightIndex =
@@ -84,12 +84,16 @@ function* quickSort(items, leftIndexArg, rightIndexArg) {
 
     if (leftIndex < index - 1) {
       console.log('sorting left section')
-      yield* quickSort(items, leftIndex, index - 1)
+      yield* quickSort({
+        items,
+        leftIndexArg: leftIndex,
+        rightIndexArg: index - 1,
+      })
     }
 
     if (index < rightIndex) {
       console.log('sorting right section')
-      yield* quickSort(items, index, rightIndex)
+      yield* quickSort({ items, leftIndexArg: index, rightIndexArg })
     }
   }
 
