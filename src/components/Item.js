@@ -31,10 +31,7 @@ class Entity extends React.Component {
     const { entity } = this.props
     return (
       <Wrapper data-is-index={entity.isIndex}>
-        <StyledEntity
-          data-is-index={entity.isIndex}
-          data-is-pivot={entity.isPivot}
-        >
+        <StyledEntity data-is-index={entity.isIndex} data-is-pivot={entity.isPivot}>
           {entity.datum}
         </StyledEntity>
       </Wrapper>

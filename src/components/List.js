@@ -1,10 +1,11 @@
-import * as React from "react"
-import Entity from "./Item"
-import range from "lodash/range"
-import FlipMove from "react-flip-move"
-import {Motion, spring} from "react-motion"
-import styled from "styled-components"
-import {UNSORTED_LIST} from "../config"
+import * as React from 'react'
+import range from 'lodash/range'
+import FlipMove from 'react-flip-move'
+import { Motion, spring } from 'react-motion'
+import styled from 'styled-components'
+import { observer } from 'mobx-react'
+import { UNSORTED_LIST } from '../config'
+import Entity from './Item'
 
 const Container = styled(FlipMove)`
   display: flex;
@@ -31,30 +32,26 @@ const indices = range(UNSORTED_LIST.length)
 
 class EntityList extends React.Component {
   state = {
-    enterLeaveAnimation: "accordianVertical",
+    enterLeaveAnimation: 'accordianVertical',
   }
 
-  renderItems = () => {
-    return this.props.entities.map(entity => {
-      return <Entity entity={entity} key={entity.id} />
-    })
-  }
+  renderItems = () => this.props.entities.map(entity => <Entity entity={entity} key={entity.id} />)
 
-  renderAnnotations = () => {
-    return indices.map(currentIndex => {
+  renderAnnotations = () =>
+    indices.map((currentIndex) => {
       const entityAtCurrentIndex = this.props.entities[currentIndex]
       return (
         <AnnotationHolder key={currentIndex}>
           {entityAtCurrentIndex.isPivot && <div>Pivot</div>}
           <div
             style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
             }}
           >
             {entityAtCurrentIndex.isLeftIndex && (
-              <div style={{color: "blue"}}>
+              <div style={{ color: 'blue' }}>
                 <div>&uarr;</div>
                 <div>
                   Left<br />index
@@ -62,8 +59,8 @@ class EntityList extends React.Component {
               </div>
             )}
             {entityAtCurrentIndex.isRightIndex && (
-              <div style={{color: "green"}}>
-                {" "}
+              <div style={{ color: 'green' }}>
+                {' '}
                 <div>&uarr;</div>
                 <div>
                   Right<br />index
@@ -74,11 +71,10 @@ class EntityList extends React.Component {
         </AnnotationHolder>
       )
     })
-  }
 
   render() {
-    const {enterLeaveAnimation} = this.state
-    const {entities} = this.props
+    const { enterLeaveAnimation } = this.state
+    const { entities } = this.props
     const leftIndex = entities.findIndex(entity => entity.isLeftIndex)
     const rightIndex = entities.findIndex(entity => entity.isRightIndex)
     const pivotIndex = entities.findIndex(entity => entity.isPivot)
@@ -97,15 +93,13 @@ class EntityList extends React.Component {
           </FlipMove>
         </Container>
         <MotionContainer>
-          <Motion style={{x: spring(pivotIndex)}}>
-            {(
-              {x}, // children is a callback which should accept the current value of
-            ) =>
+          <Motion style={{ x: spring(pivotIndex) }}>
+            {({ x }) =>
               x >= 0 && (
                 // `style`
                 <div
                   style={{
-                    color: "blue",
+                    color: 'blue',
                     WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                     transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                   }}
@@ -117,15 +111,12 @@ class EntityList extends React.Component {
           </Motion>
         </MotionContainer>
         <MotionContainer>
-          <Motion style={{x: spring(leftIndex)}}>
-            {(
-              {x}, // children is a callback which should accept the current value of
-            ) =>
+          <Motion style={{ x: spring(leftIndex) }}>
+            {({ x }) =>
               x >= 0 && (
-                // `style`
                 <div
                   style={{
-                    color: "blue",
+                    color: 'blue',
                     WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                     transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                   }}
@@ -140,15 +131,13 @@ class EntityList extends React.Component {
           </Motion>
         </MotionContainer>
         <MotionContainer>
-          <Motion style={{x: spring(rightIndex)}}>
-            {(
-              {x}, // children is a callback which should accept the current value of
-            ) =>
+          <Motion style={{ x: spring(rightIndex) }}>
+            {({ x }) =>
               x >= 0 && (
                 // `style`
                 <div
                   style={{
-                    color: "green",
+                    color: 'green',
                     WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                     transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
                   }}
@@ -167,4 +156,4 @@ class EntityList extends React.Component {
   }
 }
 
-export default EntityList
+export default observer(props => <EntityList {...props} />)
