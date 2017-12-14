@@ -31,10 +31,6 @@ const AnnotationHolder = styled.div`
 const indices = range(UNSORTED_LIST.length)
 
 class EntityList extends React.Component {
-  state = {
-    enterLeaveAnimation: 'accordianHorizontal',
-  }
-
   renderItems = () =>
     this.props.displayableListData.map(entity => <Entity entity={entity} key={entity.id} />)
 
@@ -74,87 +70,87 @@ class EntityList extends React.Component {
     })
 
   render() {
-    const { enterLeaveAnimation } = this.state
     const {
-      displayableListData: entities, pivotIndex, leftIndex, rightIndex,
+      displayableListData: entities,
+      pivotIndex,
+      leftIndex,
+      rightIndex,
+      inProgress,
     } = this.props
     if (!entities) return null
-    console.log(entities)
 
     return (
       <div>
         <Container>
-          <FlipMove
-            staggerDurationBy="30"
-            duration={500}
-            enterAnimation={enterLeaveAnimation}
-            leaveAnimation={enterLeaveAnimation}
-            typeName={null}
-          >
+          <FlipMove staggerDurationBy="30" duration={500} typeName={null}>
             {this.renderItems()}
           </FlipMove>
         </Container>
-        <MotionContainer>
-          <Motion style={{ x: spring(pivotIndex) }}>
-            {({ x }) =>
-              x >= 0 && (
-                <div
-                  style={{
-                    color: 'blue',
-                    WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                    transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                  }}
-                >
-                  <div>Pivot</div>
-                </div>
-              )
-            }
-          </Motion>
-        </MotionContainer>
-        <MotionContainer>
-          <Motion style={{ x: spring(leftIndex) }}>
-            {({ x }) =>
-              x >= 0 && (
-                <div
-                  style={{
-                    color: 'blue',
-                    WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                    transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                  }}
-                >
-                  <div>&uarr;</div>
-                  <div>
-                    Left<br />index
-                  </div>
-                </div>
-              )
-            }
-          </Motion>
-        </MotionContainer>
-        <MotionContainer>
-          <Motion style={{ x: spring(rightIndex) }}>
-            {({ x }) =>
-              x >= 0 && (
-                // `style`
-                <div
-                  style={{
-                    color: 'green',
-                    WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                    transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
-                  }}
-                >
-                  <div>&uarr;</div>
-                  <div>
-                    Right<br />index
-                  </div>
-                </div>
-              )
-            }
-          </Motion>
-        </MotionContainer>
+        {inProgress && (
+          <div>
+            <MotionContainer>
+              <Motion style={{ x: spring(pivotIndex) }}>
+                {({ x }) =>
+                  x >= 0 && (
+                    <div
+                      style={{
+                        color: 'blue',
+                        WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                        transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                      }}
+                    >
+                      <div>Pivot</div>
+                    </div>
+                  )
+                }
+              </Motion>
+            </MotionContainer>
+            <MotionContainer>
+              <Motion style={{ x: spring(leftIndex) }}>
+                {({ x }) =>
+                  x >= 0 && (
+                    <div
+                      style={{
+                        color: 'blue',
+                        WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                        transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                      }}
+                    >
+                      <div>&uarr;</div>
+                      <div>
+                        Left<br />index
+                      </div>
+                    </div>
+                  )
+                }
+              </Motion>
+            </MotionContainer>
+            <MotionContainer>
+              <Motion style={{ x: spring(rightIndex) }}>
+                {({ x }) =>
+                  x >= 0 && (
+                    // `style`
+                    <div
+                      style={{
+                        color: 'green',
+                        WebkitTransform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                        transform: `translate3d(${x * 100 + 50}px, 0, 0)`,
+                      }}
+                    >
+                      <div>&uarr;</div>
+                      <div>
+                        Right<br />index
+                      </div>
+                    </div>
+                  )
+                }
+              </Motion>
+            </MotionContainer>
+          </div>
+        )}
       </div>
     )
   }
 }
 
-export default observer(props => <EntityList {...props} />)
+export default EntityList

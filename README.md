@@ -1,6 +1,6 @@
 # CSJS
 
-A collection of foundational computer science concepts visualized with Javascript for the browser
+A collection of foundational computer science concepts animated and interact-able with Javascript.
 
 Steps to run:
 

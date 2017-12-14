@@ -14,10 +14,12 @@ const StyledEntity = styled.div`
   border-radius: 50%;
   background: ${({ 'data-is-pivot': isPivot }) => {
     if (isPivot) {
-      return 'purple'
+      return 'blue'
     }
     return 'teal'
   }};
+  color: white;
+  font-size: 28px;
   height: 100px;
   width: 100px;
   display: flex;

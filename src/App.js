@@ -29,6 +29,17 @@ const ButtonWrapper = styled.div`
 
 @observer
 class App extends React.Component {
+  getMainButtonLabel = () => {
+    const { inProgress, done } = this.props.store
+    if (inProgress) {
+      return 'Next step'
+    }
+    if (done) {
+      return 'Restart'
+    }
+    return 'Start'
+  }
+
   render() {
     const {
       done,
@@ -43,11 +54,12 @@ class App extends React.Component {
       rightIndex,
     } = this.props.store
     const clickHandler = done ? restart : step
+    const mainButtonLabel = this.getMainButtonLabel()
     return (
       <AppWrapper>
         <div>
           <ButtonWrapper>
-            <StyledButton onClick={clickHandler}>{done ? 'Restart' : 'Step forward'}</StyledButton>
+            <StyledButton onClick={clickHandler}>{mainButtonLabel}</StyledButton>
             {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
             {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
           </ButtonWrapper>
@@ -56,6 +68,7 @@ class App extends React.Component {
             pivotIndex={pivotIndex}
             leftIndex={leftIndex}
             rightIndex={rightIndex}
+            inProgress={inProgress}
           />
           {done && <div>Sorted</div>}
         </div>

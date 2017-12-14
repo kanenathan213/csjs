@@ -1,15 +1,16 @@
 import { observable, action, computed } from 'mobx'
 import shuffle from 'lodash/shuffle'
 import sortBy from 'lodash/sortBy'
-import uniqueId from 'lodash/uniqueId'
 import { getRandomNumberBetweenXandY, getUnsortedListByLength } from './utils'
 import quickSort from '../quicksort'
 
 const UNSORTED_LIST = getUnsortedListByLength(6)
 
+const getRandomId = () => String(getRandomNumberBetweenXandY(1, 10 ** 10))
+
 const initialBaseList = UNSORTED_LIST.map(item => ({
   value: item,
-  id: uniqueId(),
+  id: getRandomId(),
 }))
 
 class ListStore {
@@ -56,15 +57,12 @@ class ListStore {
     }
     const newItem = {
       value: getRandomNumberBetweenXandY(1, this.baseList.length),
-      id: getRandomNumberBetweenXandY(1, this.baseList.length),
+      id: getRandomId(),
     }
-    const newList = [...this.baseList.map(item => ({ value: item.value, id: item.id })), newItem]
-    const sorted = sortBy(newList, o => o.id)
-    const reindexed = sorted.map((item, index) => ({
-      value: item.value,
-      id: index,
-    }))
-    this.baseList = reindexed
+    const newList = this.baseList.map(item => ({ value: item.value, id: item.id }))
+    newList.splice(getRandomNumberBetweenXandY(0, this.baseList.length), 0, newItem)
+
+    this.baseList = newList
   }
 
   @action.bound
@@ -72,7 +70,6 @@ class ListStore {
     if (!this.quickSortGen) {
       this.quickSortGen = quickSort({ items: this.baseList })
       this.inProgress = true
-      return
     }
 
     const {
