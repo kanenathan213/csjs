@@ -32,14 +32,15 @@ const indices = range(UNSORTED_LIST.length)
 
 class EntityList extends React.Component {
   state = {
-    enterLeaveAnimation: 'accordianVertical',
+    enterLeaveAnimation: 'accordianHorizontal',
   }
 
-  renderItems = () => this.props.entities.map(entity => <Entity entity={entity} key={entity.id} />)
+  renderItems = () =>
+    this.props.displayableListData.map(entity => <Entity entity={entity} key={entity.id} />)
 
   renderAnnotations = () =>
     indices.map((currentIndex) => {
-      const entityAtCurrentIndex = this.props.entities[currentIndex]
+      const entityAtCurrentIndex = this.props.displayableListData[currentIndex]
       return (
         <AnnotationHolder key={currentIndex}>
           {entityAtCurrentIndex.isPivot && <div>Pivot</div>}
@@ -74,10 +75,11 @@ class EntityList extends React.Component {
 
   render() {
     const { enterLeaveAnimation } = this.state
-    const { entities } = this.props
-    const leftIndex = entities.findIndex(entity => entity.isLeftIndex)
-    const rightIndex = entities.findIndex(entity => entity.isRightIndex)
-    const pivotIndex = entities.findIndex(entity => entity.isPivot)
+    const {
+      displayableListData: entities, pivotIndex, leftIndex, rightIndex,
+    } = this.props
+    if (!entities) return null
+    console.log(entities)
 
     return (
       <div>
@@ -96,7 +98,6 @@ class EntityList extends React.Component {
           <Motion style={{ x: spring(pivotIndex) }}>
             {({ x }) =>
               x >= 0 && (
-                // `style`
                 <div
                   style={{
                     color: 'blue',

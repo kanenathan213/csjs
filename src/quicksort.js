@@ -1,5 +1,5 @@
 function swap(items, leftIndex, rightIndex) {
-  var temp = items[leftIndex]
+  const temp = items[leftIndex]
   items[leftIndex] = items[rightIndex]
   items[rightIndex] = temp
 }
@@ -19,7 +19,7 @@ function* partition(items, leftIndex, rightIndex) {
 
   while (i <= j) {
     while (items[i].value < pivotValue) {
-      i++
+      i += 1
       yield {
         items,
         leftIndex: i,
@@ -29,7 +29,7 @@ function* partition(items, leftIndex, rightIndex) {
     }
 
     while (items[j].value > pivotValue) {
-      j--
+      j -= 1
       yield {
         items,
         leftIndex: i,
@@ -39,6 +39,7 @@ function* partition(items, leftIndex, rightIndex) {
     }
 
     if (i <= j) {
+      console.log('swapping')
       swap(items, i, j)
       yield {
         items,
@@ -46,14 +47,14 @@ function* partition(items, leftIndex, rightIndex) {
         rightIndex: j,
         pivotIndex,
       }
-      i++
+      i += 1
       yield {
         items,
         leftIndex: i,
         rightIndex: j,
         pivotIndex,
       }
-      j--
+      j -= 1
       yield {
         items,
         leftIndex: i,

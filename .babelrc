@@ -1,0 +1,16 @@
+{
+  "presets": ["es2015", "stage-1", "react", "flow"],
+
+  "plugins": [
+    "react-hot-loader/babel",
+    "transform-decorators-legacy",
+    [
+      "styled-components",
+      {
+        "displayName": true
+      }
+    ],
+    "transform-object-rest-spread",
+    "transform-class-properties"
+  ]
+}
