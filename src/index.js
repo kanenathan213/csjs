@@ -5,7 +5,7 @@ import 'react-hot-loader/patch'
 import './index.css'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
-import observableListStore from './model/List'
+import RootStore from './model/Root'
 
-ReactDOM.render(<App store={observableListStore} />, global.document.getElementById('root'))
+ReactDOM.render(<App store={new RootStore()} />, global.document.getElementById('root'))
 registerServiceWorker()

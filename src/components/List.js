@@ -3,7 +3,6 @@ import range from 'lodash/range'
 import FlipMove from 'react-flip-move'
 import { Motion, spring } from 'react-motion'
 import styled from 'styled-components'
-import { observer } from 'mobx-react'
 import { UNSORTED_LIST } from '../config'
 import Entity from './Item'
 

@@ -2,7 +2,6 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import EntityList from './components/List'
-import './App.css'
 
 // https://www.nczonline.net/blog/tag/computer-science/
 
@@ -28,9 +27,9 @@ const ButtonWrapper = styled.div`
 `
 
 @observer
-class App extends React.Component {
+class App extends React.Component<*> {
   getMainButtonLabel = () => {
-    const { inProgress, done } = this.props.store
+    const { inProgress, done } = this.props.store.quickSortStore
     if (inProgress) {
       return 'Next step'
     }
@@ -44,15 +43,14 @@ class App extends React.Component {
     const {
       done,
       step,
-      shuffle,
-      add,
       restart,
       inProgress,
       displayableListData,
       pivotIndex,
       leftIndex,
       rightIndex,
-    } = this.props.store
+    } = this.props.store.quickSortStore
+    const { shuffle, add } = this.props.store
     const clickHandler = done ? restart : step
     const mainButtonLabel = this.getMainButtonLabel()
     return (
