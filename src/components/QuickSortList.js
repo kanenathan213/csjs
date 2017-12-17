@@ -1,10 +1,13 @@
+// @flow
+
 import * as React from 'react'
 import range from 'lodash/range'
 import FlipMove from 'react-flip-move'
 import { Motion, spring } from 'react-motion'
 import styled from 'styled-components'
 import { UNSORTED_LIST } from '../config'
-import Entity from './Item'
+import Item from './Item'
+import type { DisplayableQuickSortItem } from '../types/DisplayableQuickSortItem.js.flow'
 
 const Container = styled(FlipMove)`
   display: flex;
@@ -29,12 +32,19 @@ const AnnotationHolder = styled.div`
 `
 const indices = range(UNSORTED_LIST.length)
 
-class EntityList extends React.Component {
-  renderItems = () =>
-    this.props.displayableListData.map(entity => <Entity entity={entity} key={entity.id} />)
+type Props = {
+  displayableListData: Array<DisplayableQuickSortItem>,
+  pivotIndex: ?number,
+  leftIndex: ?number,
+  rightIndex: ?number,
+  inProgress: boolean,
+}
+
+class QuickSortList extends React.Component<Props> {
+  renderItems = () => this.props.displayableListData.map(entity => <Item entity={entity} key={entity.id} />)
 
   renderAnnotations = () =>
-    indices.map((currentIndex) => {
+    indices.map(currentIndex => {
       const entityAtCurrentIndex = this.props.displayableListData[currentIndex]
       return (
         <AnnotationHolder key={currentIndex}>
@@ -69,26 +79,20 @@ class EntityList extends React.Component {
     })
 
   render() {
-    const {
-      displayableListData: entities,
-      pivotIndex,
-      leftIndex,
-      rightIndex,
-      inProgress,
-    } = this.props
+    const { displayableListData: entities, pivotIndex, leftIndex, rightIndex, inProgress } = this.props
     if (!entities) return null
 
     return (
       <div>
         <Container>
-          <FlipMove staggerDurationBy="30" duration={500} typeName={null}>
+          <FlipMove staggerDurationBy="30" duration={500} style={{ display: 'flex' }}>
             {this.renderItems()}
           </FlipMove>
         </Container>
         {inProgress && (
           <div>
             <MotionContainer>
-              <Motion style={{ x: spring(pivotIndex) }}>
+              <Motion style={{ x: pivotIndex ? spring(pivotIndex) : 0 }}>
                 {({ x }) =>
                   x >= 0 && (
                     <div
@@ -105,7 +109,7 @@ class EntityList extends React.Component {
               </Motion>
             </MotionContainer>
             <MotionContainer>
-              <Motion style={{ x: spring(leftIndex) }}>
+              <Motion style={{ x: leftIndex ? spring(leftIndex) : 0 }}>
                 {({ x }) =>
                   x >= 0 && (
                     <div
@@ -125,10 +129,9 @@ class EntityList extends React.Component {
               </Motion>
             </MotionContainer>
             <MotionContainer>
-              <Motion style={{ x: spring(rightIndex) }}>
+              <Motion style={{ x: rightIndex ? spring(rightIndex) : 0 }}>
                 {({ x }) =>
                   x >= 0 && (
-                    // `style`
                     <div
                       style={{
                         color: 'green',
@@ -152,4 +155,4 @@ class EntityList extends React.Component {
   }
 }
 
-export default EntityList
+export default QuickSortList

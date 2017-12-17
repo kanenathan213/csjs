@@ -1,0 +1,15 @@
+// @flow
+
+import * as actionTypes from '../actionTypes'
+import type { BaseList } from './BaseListItem.js.flow'
+import type { AlgorithNames } from '../constants/algorithmNames'
+
+export type StartAction = {
+  type: typeof actionTypes.START,
+  payload: {
+    list: BaseList,
+    algorithmName: AlgorithNames
+  }
+}
+
+export type AppAction = StartAction

@@ -1,0 +1,24 @@
+[include]
+./src/
+
+[options]
+suppress_comment=\\(.\\|\n\\)*\\#FlowExpectError
+suppress_comment=\\(.\\|\n\\)*\\#FlowIgnoreAsset
+
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=src
+module.name_mapper='^react-router-native' -> 'react-router-dom'
+module.name_mapper='^styled-components/native' -> 'styled-components'
+module.name_mapper='^react-native' -> 'react-native-web'
+
+[libs]
+flow_typed/decls/globals.js
+
+[ignore]
+.*/node_modules/animated/.*
+.*/node_modules/react-native/.*
+.*/node_modules/react-native-web/.*
+.*/node_modules/metro-bundler/.*
+.*/node_modules/eslint-plugin-jsx-a11y/src/.*
+.*/node_modules/flow-coverage-report/src/.*
+.*/node_modules/config-chain/.*

@@ -1,0 +1,8 @@
+// @flow
+
+export type BaseListItem = {
+  value: number,
+  id: string,
+}
+
+export type BaseList = Array<BaseListItem>

@@ -1,9 +1,17 @@
-import * as React from 'react'
-import { observer } from 'mobx-react'
-import styled from 'styled-components'
-import EntityList from './components/List'
+// @flow
 
-// https://www.nczonline.net/blog/tag/computer-science/
+import * as React from 'react'
+import styled from 'styled-components'
+import { connect } from 'react-redux'
+import type { Dispatch } from 'redux'
+import algorithmNames from './constants/algorithmNames'
+import QuickSort from './views/QuickSortRunner'
+import { baseListSelector } from './reducers/list'
+import { isInProgressSelector, isDoneSelector } from './reducers/quickSort'
+import type { State } from './reducers/root'
+import type { BaseList } from './types/BaseListItem.js.flow'
+import { createNextAction, createStartAction } from './actions'
+import type { AppAction } from './types/Actions.js.flow'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -26,53 +34,72 @@ const ButtonWrapper = styled.div`
   padding: 10px;
 `
 
-@observer
+type StateProps = {
+  inProgress: boolean,
+  done: boolean,
+  baseList: BaseList,
+}
+
+type DispatchProps = {
+  start: BaseList => ($Keys<typeof algorithmNames>) => any,
+  next: () => any,
+  restart: () => any,
+  shuffle: () => any,
+  add: () => any,
+}
+
+const mapStateToProps = (state: State): StateProps => ({
+  inProgress: isInProgressSelector(state),
+  done: isDoneSelector(state),
+  baseList: baseListSelector(state),
+})
+
+const mapDispatchToProps = (dispatch: Dispatch<AppAction>): DispatchProps => ({
+  next: () => dispatch(createNextAction()),
+  restart: () => dispatch(createNextAction()),
+  shuffle: () => dispatch(createNextAction()),
+  add: () => dispatch(createNextAction()),
+  start: (list: BaseList) => (algorithmName: $Keys<typeof algorithmNames>) =>
+    dispatch(createStartAction(algorithmName, list)),
+})
+
+const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: Object) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  start: dispatchProps.start(stateProps.baseList),
+})
+
 class App extends React.Component<*> {
-  getMainButtonLabel = () => {
-    const { inProgress, done } = this.props.store.quickSortStore
+  handleClick = algorithmName => {
+    const { inProgress, done, next, restart, start } = this.props
     if (inProgress) {
-      return 'Next step'
+      next()
+      return
     }
     if (done) {
-      return 'Restart'
+      restart(algorithmName)
+      return
     }
-    return 'Start'
+    start(algorithmName)
   }
 
   render() {
-    const {
-      done,
-      step,
-      restart,
-      inProgress,
-      displayableListData,
-      pivotIndex,
-      leftIndex,
-      rightIndex,
-    } = this.props.store.quickSortStore
-    const { shuffle, add } = this.props.store
-    const clickHandler = done ? restart : step
-    const mainButtonLabel = this.getMainButtonLabel()
+    const { shuffle, add, inProgress } = this.props
     return (
       <AppWrapper>
         <div>
           <ButtonWrapper>
-            <StyledButton onClick={clickHandler}>{mainButtonLabel}</StyledButton>
             {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
             {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
           </ButtonWrapper>
-          <EntityList
-            displayableListData={displayableListData}
-            pivotIndex={pivotIndex}
-            leftIndex={leftIndex}
-            rightIndex={rightIndex}
-            inProgress={inProgress}
-          />
-          {done && <div>Sorted</div>}
+          <QuickSort clickHandler={this.handleClick} />
         </div>
       </AppWrapper>
     )
   }
 }
 
-export default App
+const DecoratedApp = connect(mapStateToProps, mapDispatchToProps, mergeProps)(App)
+
+export default DecoratedApp

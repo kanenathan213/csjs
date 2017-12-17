@@ -1,0 +1,10 @@
+// @flow
+
+import type { BaseListItem } from './BaseListItem.js.flow'
+
+export type QuickSortOutputValue = {
+  items: Array<BaseListItem>,
+  leftIndex: ?number,
+  rightIndex: ?number,
+  pivotIndex: ?number,
+}

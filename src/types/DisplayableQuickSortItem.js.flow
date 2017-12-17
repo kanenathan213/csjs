@@ -1,0 +1,9 @@
+// @flow
+
+export type DisplayableQuickSortItem = {
+  isLeftIndex: boolean,
+  isRightIndex: boolean,
+  isPivot: boolean,
+  datum: number,
+  id: string,
+}
