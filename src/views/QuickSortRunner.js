@@ -48,6 +48,8 @@ const QuickSortRunner = ({
   inProgress,
 }: StateProps) => (
   <div>
+    <hr />
+    <h2>QuickSort sort</h2>
     <ButtonWrapper>
       <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT, false)}>
         {inProgress ? 'Next' : 'Start'}

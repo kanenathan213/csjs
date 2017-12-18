@@ -34,7 +34,7 @@ class Entity extends React.Component<Props> {
     const { entity } = this.props
     return (
       <div>
-        <StyledEntity data-is-pivot={entity.isPivot}>{entity.datum}</StyledEntity>
+        <StyledEntity data-is-pivot={entity.isPivot}>{entity.datum || entity.value}</StyledEntity>
       </div>
     )
   }

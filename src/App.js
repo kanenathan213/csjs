@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import type { Dispatch } from 'redux'
 import algorithmNames from './constants/algorithmNames'
 import QuickSort from './views/QuickSortRunner'
+import MergeSort from './views/MergeSortRunner'
 import { baseListSelector } from './reducers/list'
 import { isInProgressSelector, isDoneSelector } from './reducers/quickSort'
 import type { State } from './reducers/root'
@@ -21,6 +22,7 @@ import type { AppAction } from './types/Actions.js.flow'
 
 const AppWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -94,12 +96,15 @@ class App extends React.Component<*> {
     const { shuffle, add, inProgress } = this.props
     return (
       <AppWrapper>
-        <div>
+        {/* <div>
           <ButtonWrapper>
             {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
             {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
           </ButtonWrapper>
           <QuickSort clickHandler={this.handleClick} />
+        </div> */}
+        <div>
+          <MergeSort />
         </div>
       </AppWrapper>
     )
