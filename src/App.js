@@ -65,8 +65,8 @@ const mapDispatchToProps = (dispatch: Dispatch<AppAction>): DispatchProps => ({
   restart: () => dispatch(createRestartAction()),
   shuffle: () => dispatch(createShuffleAction()),
   add: () => dispatch(createAddAction()),
-  start: (list: BaseList) => (algorithmName: $Keys<typeof algorithmNames>) =>
-    dispatch(createStartAction(algorithmName, list)),
+  start: (list: BaseList) => (algorithmName: $Keys<typeof algorithmNames>, isAutomatic: boolean) =>
+    dispatch(createStartAction(algorithmName, list, isAutomatic)),
 })
 
 const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: Object) => ({
@@ -77,17 +77,17 @@ const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownPro
 })
 
 class App extends React.Component<*> {
-  handleClick = (algorithmName, generator) => {
+  handleClick = (algorithmName, isAutomatic) => {
     const { inProgress, done, next, restart, start } = this.props
     if (inProgress) {
-      next(generator)
+      next()
       return
     }
     if (done) {
       restart(algorithmName)
       return
     }
-    start(algorithmName)
+    start(algorithmName, isAutomatic)
   }
 
   render() {

@@ -49,10 +49,15 @@ const QuickSortRunner = ({
 }: StateProps) => (
   <div>
     <ButtonWrapper>
-      <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT)}>
+      <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT, false)}>
         {inProgress ? 'Next' : 'Start'}
       </StyledButton>
     </ButtonWrapper>
+    {!inProgress && (
+      <ButtonWrapper>
+        <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT, true)}>Play</StyledButton>
+      </ButtonWrapper>
+    )}
     <List
       displayableListData={displayableListData}
       pivotIndex={pivotIndex}

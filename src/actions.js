@@ -21,10 +21,11 @@ export const createShuffleAction = (): ShuffleAction => ({
   type: actionTypes.SHUFFLE,
 })
 
-export const createStartAction = (algorithmName: AlgorithNames, list: BaseList): StartAction => ({
+export const createStartAction = (algorithmName: AlgorithNames, list: BaseList, isAutomatic): StartAction => ({
   type: actionTypes.START,
   payload: {
     list,
     algorithmName,
+    isAutomatic,
   },
 })
