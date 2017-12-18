@@ -8,8 +8,24 @@ export type StartAction = {
   type: typeof actionTypes.START,
   payload: {
     list: BaseList,
-    algorithmName: AlgorithNames
-  }
+    algorithmName: AlgorithNames,
+  },
 }
 
-export type AppAction = StartAction
+export type NextAction = {
+  type: typeof actionTypes.NEXT,
+}
+
+export type RestartAction = {
+  type: typeof actionTypes.RESET,
+}
+
+export type ShuffleAction = {
+  type: typeof actionTypes.SHUFFLE,
+}
+
+export type AddAction = {
+  type: typeof actionTypes.ADD_ITEM,
+}
+
+export type AppAction = StartAction | NextAction | RestartAction | AddAction | ShuffleAction

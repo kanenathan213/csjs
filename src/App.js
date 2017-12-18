@@ -10,7 +10,13 @@ import { baseListSelector } from './reducers/list'
 import { isInProgressSelector, isDoneSelector } from './reducers/quickSort'
 import type { State } from './reducers/root'
 import type { BaseList } from './types/BaseListItem.js.flow'
-import { createNextAction, createStartAction } from './actions'
+import {
+  createNextAction,
+  createStartAction,
+  createShuffleAction,
+  createRestartAction,
+  createAddAction,
+} from './actions'
 import type { AppAction } from './types/Actions.js.flow'
 
 const AppWrapper = styled.div`
@@ -56,9 +62,9 @@ const mapStateToProps = (state: State): StateProps => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<AppAction>): DispatchProps => ({
   next: () => dispatch(createNextAction()),
-  restart: () => dispatch(createNextAction()),
-  shuffle: () => dispatch(createNextAction()),
-  add: () => dispatch(createNextAction()),
+  restart: () => dispatch(createRestartAction()),
+  shuffle: () => dispatch(createShuffleAction()),
+  add: () => dispatch(createAddAction()),
   start: (list: BaseList) => (algorithmName: $Keys<typeof algorithmNames>) =>
     dispatch(createStartAction(algorithmName, list)),
 })
@@ -71,10 +77,10 @@ const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownPro
 })
 
 class App extends React.Component<*> {
-  handleClick = algorithmName => {
+  handleClick = (algorithmName, generator) => {
     const { inProgress, done, next, restart, start } = this.props
     if (inProgress) {
-      next()
+      next(generator)
       return
     }
     if (done) {

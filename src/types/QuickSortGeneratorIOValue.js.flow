@@ -2,7 +2,7 @@
 
 import type { BaseListItem } from './BaseListItem.js.flow'
 
-export type QuickSortOutputValue = {
+export type QuickSortGeneratorIOValue = {
   items: Array<BaseListItem>,
   leftIndex: ?number,
   rightIndex: ?number,

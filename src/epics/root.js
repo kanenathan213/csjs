@@ -1,9 +1,8 @@
 // @flow
 
 import { combineEpics } from 'redux-observable'
-import pingEpic from './ping'
+import quickSortEpic from './quickSort'
 
-const rootEpic = combineEpics(pingEpic)
+const rootEpic = combineEpics(quickSortEpic)
 
 export default rootEpic
-

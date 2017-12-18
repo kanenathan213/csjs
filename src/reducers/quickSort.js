@@ -3,28 +3,26 @@
 import * as actionTypes from '../actionTypes'
 import type { State } from './root'
 import algorithmNames from '../constants/algorithmNames'
-import quickSort from '../algorithms/asGenerators/quickSort'
-import type { QuickSortOutputValue } from '../types/QuickSortOutput.js.flow'
+import type { BaseListItem } from '../types/BaseListItem.js.flow'
 
 export type QuickSortState = {
-  +generator: ?Generator<QuickSortOutputValue, QuickSortOutputValue, void>,
   +inProgress: boolean,
   +leftIndex: ?number,
   +rightIndex: ?number,
   +pivotIndex: ?number,
   +done: boolean,
+  +currentSortingList: Array<BaseListItem>,
 }
 
 export const initialState: QuickSortState = {
-  generator: null,
   inProgress: false,
   done: false,
   leftIndex: null,
   rightIndex: null,
   pivotIndex: null,
+  currentSortingList: [],
 }
 
-export const generatorSelector = (state: State) => state.quickSort.generator
 export const indicesSelector = (state: State) => ({
   leftIndex: state.quickSort.leftIndex,
   rightIndex: state.quickSort.rightIndex,
@@ -32,6 +30,7 @@ export const indicesSelector = (state: State) => ({
 })
 export const isInProgressSelector = (state: State) => state.quickSort.inProgress
 export const isDoneSelector = (state: State) => state.quickSort.done
+export const currentSortingListSelector = (state: State) => state.quickSort.currentSortingList
 
 export default (state: QuickSortState = initialState, action: Object): QuickSortState => {
   switch (action.type) {
@@ -39,28 +38,24 @@ export default (state: QuickSortState = initialState, action: Object): QuickSort
       return initialState
     }
     case actionTypes.START: {
-      const { list, algorithmName } = action.payload
+      const { algorithmName } = action.payload
       if (algorithmName !== algorithmNames.QUICKSORT) return state
 
       return {
         ...state,
-        generator: quickSort({ items: list }),
         inProgress: true,
       }
     }
-    case actionTypes.NEXT: {
-      if (!state.generator) return state
-      const { value, done } = state.generator.next()
-      if (!value) {
-        return state
-      }
-      const { leftIndex, rightIndex, pivotIndex } = value
+    case actionTypes.QUICKSORT_SORTING_UPDATED: {
+      const { value, done } = action.payload
+      const { leftIndex, rightIndex, pivotIndex, items } = value
       return {
         ...state,
         done,
         leftIndex,
         rightIndex,
         pivotIndex,
+        currentSortingList: items,
         inProgress: !done,
       }
     }
