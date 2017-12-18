@@ -4,10 +4,9 @@ import type { BaseListItem } from '../../types/BaseListItem.js.flow'
 import type { QuickSortGeneratorIOValue } from '../../types/QuickSortGeneratorIOValue.js.flow'
 
 function swap(items, leftIndex, rightIndex) {
-  const result = [...items]
-  result[leftIndex] = items[rightIndex]
-  result[rightIndex] = items[leftIndex]
-  return result
+  const temp = items[leftIndex]
+  items[leftIndex] = items[rightIndex]
+  items[rightIndex] = temp
 }
 
 type NextValue = {
@@ -17,12 +16,11 @@ type NextValue = {
   pivotIndex: number,
 }
 
-function* partition(itemsArg, leftIndexArg, rightIndexArg): Generator<QuickSortGeneratorIOValue, NextValue, NextValue> {
+function* partition(items, leftIndexArg, rightIndexArg): Generator<QuickSortGeneratorIOValue, number, NextValue> {
   const pivotIndex = Math.floor((rightIndexArg + leftIndexArg) / 2)
-  const pivotValue = itemsArg[pivotIndex].value
+  const pivotValue = items[pivotIndex].value
   let i = leftIndexArg
   let j = rightIndexArg
-  let items = [...itemsArg]
   yield {
     items,
     leftIndex: i,
@@ -53,7 +51,7 @@ function* partition(itemsArg, leftIndexArg, rightIndexArg): Generator<QuickSortG
 
     if (i <= j) {
       console.log('swapping')
-      items = swap(items, i, j)
+      swap(items, i, j)
       yield {
         items,
         leftIndex: i,
@@ -85,12 +83,7 @@ function* partition(itemsArg, leftIndexArg, rightIndexArg): Generator<QuickSortG
     }
   }
 
-  return {
-    items,
-    leftIndex: i,
-    rightIndex: j,
-    pivotIndex,
-  }
+  return i
 }
 
 type QuickSortArgs = {
@@ -102,15 +95,13 @@ type QuickSortArgs = {
 function* quickSort(
   args: QuickSortArgs
 ): Generator<QuickSortGeneratorIOValue, QuickSortGeneratorIOValue, QuickSortGeneratorIOValue> {
-  let { items } = args
-  const { leftIndexArg, rightIndexArg } = args
+  const { items, leftIndexArg, rightIndexArg } = args
   let index
   const leftIndex = typeof leftIndexArg === 'number' ? leftIndexArg : 0
   const rightIndex = typeof rightIndexArg === 'number' ? rightIndexArg : items.length - 1
 
   if (items.length > 1) {
-    ;({ items, leftIndex: index } = yield* partition(items, leftIndex, rightIndex))
-
+    index = yield* partition(items, leftIndex, rightIndex)
     if (leftIndex < index - 1) {
       console.log('sorting left section')
       yield* quickSort({
@@ -122,7 +113,11 @@ function* quickSort(
 
     if (index < rightIndex) {
       console.log('sorting right section')
-      yield* quickSort({ items, leftIndexArg: index, rightIndexArg })
+      yield* quickSort({
+        items,
+        leftIndexArg: index,
+        rightIndexArg,
+      })
     }
   }
 
