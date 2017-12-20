@@ -5,14 +5,36 @@ import range from 'lodash/range'
 import FlipMove from 'react-flip-move'
 import styled from 'styled-components'
 import { UNSORTED_LIST } from '../config'
-import Item from './Item'
-import type { DisplayableQuickSortItem } from '../types/DisplayableQuickSortItem.js.flow'
 
 const Container = styled(FlipMove)`
   display: flex;
   justify-content: center;
   margin: 0 auto;
   width: 100%;
+`
+
+const StyledItem = styled.div`
+  border-radius: 50%;
+  background: ${({ 'data-left': isInLeft, 'data-right': isInRight, 'data-hide': hide }) => {
+    if (hide) {
+      return 'white'
+    }
+    if (isInLeft) {
+      return 'blue'
+    }
+    if (isInRight) {
+      return 'teal'
+    }
+    return 'gray'
+  }};
+  color: white;
+  font-size: 28px;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
 `
 
 const AnnotationHolder = styled.div`
@@ -26,12 +48,15 @@ const AnnotationHolder = styled.div`
 `
 const indices = range(UNSORTED_LIST.length)
 
-type Props = {
-  displayableListData: Array<DisplayableQuickSortItem>,
-}
-
-class MergeSortList extends React.Component<Props> {
-  renderItems = () => this.props.entities.map(entity => <Item entity={entity} key={entity.id} />)
+class MergeSortList extends React.Component<*> {
+  renderItems = () =>
+    this.props.entities.map(entity => (
+      <div key={entity.id}>
+        <StyledItem data-left={entity.isInLeft} data-hide={entity.isBeingMerged} data-right={entity.isInRight}>
+          {entity.value}
+        </StyledItem>
+      </div>
+    ))
 
   renderAnnotations = () =>
     indices.map(currentIndex => {
@@ -71,7 +96,6 @@ class MergeSortList extends React.Component<Props> {
   render() {
     const { entities } = this.props
     if (!entities) return null
-
     return (
       <div>
         <Container>

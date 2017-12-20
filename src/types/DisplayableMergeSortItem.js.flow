@@ -1,0 +1,9 @@
+// @flow
+
+export type DisplayableMergeSortItem = {
+  isInLeft: boolean,
+  isInRight: boolean,
+  value: number,
+  id: string,
+  isBeingMerged: boolean,
+}

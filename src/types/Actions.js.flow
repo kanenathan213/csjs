@@ -28,4 +28,15 @@ export type AddAction = {
   type: typeof actionTypes.ADD_ITEM,
 }
 
-export type AppAction = StartAction | NextAction | RestartAction | AddAction | ShuffleAction
+export type MergeSortUpdatedAction = {
+  type: typeof actionTypes.MERGESORT_UPDATED,
+  payload: {
+    value: {
+      left: BaseList,
+      right: BaseList,
+      merged: BaseList,
+    },
+  },
+}
+
+export type AppAction = StartAction | NextAction | RestartAction | AddAction | ShuffleAction | MergeSortUpdatedAction

@@ -51,13 +51,13 @@ const QuickSortRunner = ({
     <hr />
     <h2>QuickSort sort</h2>
     <ButtonWrapper>
-      <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT, false)}>
+      <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT)}>
         {inProgress ? 'Next' : 'Start'}
       </StyledButton>
     </ButtonWrapper>
     {!inProgress && (
       <ButtonWrapper>
-        <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT, true)}>Play</StyledButton>
+        <StyledButton onClick={() => clickHandler(algorithmNames.QUICKSORT)}>Play</StyledButton>
       </ButtonWrapper>
     )}
     <List

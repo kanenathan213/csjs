@@ -1,0 +1,12 @@
+// @flow
+
+import type { BaseList } from './BaseListItem.js.flow'
+
+export type MergeSortGenIO = {
+  left: BaseList,
+  right: BaseList,
+  merged: BaseList,
+  isMerged?: boolean,
+  status?: string,
+  isMerging?: boolean,
+}

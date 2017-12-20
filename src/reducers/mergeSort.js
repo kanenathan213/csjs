@@ -3,30 +3,66 @@
 import * as actionTypes from '../actionTypes'
 import type { State } from './root'
 import algorithmNames from '../constants/algorithmNames'
-import type { BaseListItem } from '../types/BaseListItem.js.flow'
-import type { AppAction } from '../types/Actions.js.flow'
+import type { BaseList } from '../types/BaseListItem.js.flow'
+import type { MergeSortUpdatedAction, AppAction } from '../types/Actions.js.flow'
+import type { DisplayableMergeSortItem } from '../types/DisplayableMergeSortItem.js.flow'
 
 export type MergeSortState = {
-  +currentSortingList: Array<BaseListItem>,
-  +sortedList: Array<BaseListItem>,
   +inProgress: boolean,
+  +left: BaseList,
+  +right: BaseList,
+  +mergingList: BaseList,
+  +isMerged: BaseList,
+  +topList: Array<DisplayableMergeSortItem>,
 }
 
 export const initialState: MergeSortState = {
-  currentSortingList: [],
-  sortedList: [],
+  left: [],
+  right: [],
   inProgress: false,
+  mergingList: [],
+  isMerged: [],
+  topList: [],
 }
 
-// export const indicesSelector = (state: State) => ({
-//   leftIndex: state.quickSort.leftIndex,
-//   rightIndex: state.quickSort.rightIndex,
-//   pivotIndex: state.quickSort.pivotIndex,
-// })
 export const isInProgressSelector = (state: State) => state.mergeSort.inProgress
-// export const isDoneSelector = (state: State) => state.mergeSort.done
-export const currentSortingListSelector = (state: State) => state.mergeSort.currentSortingList
-export const sortedListSelector = (state: State) => state.mergeSort.sortedList
+export const mergingListSelector = (state: State) => state.mergeSort.mergingList
+export const isMergedSelector = (state: State) => state.mergeSort.isMerged
+export const leftSelector = (state: State) => state.mergeSort.left
+export const rightSelector = (state: State) => state.mergeSort.right
+export const topListSelector = (state: State) => state.mergeSort.topList
+
+const transformBaseToDisplay = (
+  baseList: BaseList | Array<DisplayableMergeSortItem>,
+  action?: MergeSortUpdatedAction,
+  mergingList?: BaseList
+): Array<DisplayableMergeSortItem> =>
+  baseList.map(item => ({
+      isInLeft: action ? action.payload.value.left.some(leftItem => leftItem.id === item.id) : false,
+      isInRight: action ? action.payload.value.right.some(rightItem => rightItem.id === item.id) : false,
+      value: item.value,
+      id: item.id,
+      isBeingMerged: mergingList ? mergingList.some(mergingItem => mergingItem.id === item.id) : false,
+    }))
+
+const getNextTopList = (
+  state: MergeSortState,
+  action: MergeSortUpdatedAction,
+  mergingList: BaseList
+): Array<DisplayableMergeSortItem> => {
+  if (action.payload.value.isMerged) {
+    const indexToReinsert = state.topList.findIndex(item => item.isBeingMerged)
+    console.log(indexToReinsert)
+    if (indexToReinsert === -1) return transformBaseToDisplay(state.topList, action, mergingList)
+    return [
+      ...state.topList.slice(0, indexToReinsert),
+      ...transformBaseToDisplay(action.payload.value.merged, action, mergingList),
+      ...state.topList.slice(indexToReinsert + action.payload.value.merged.length),
+    ]
+  }
+
+  return transformBaseToDisplay(state.topList, action, mergingList)
+}
 
 export default (state: MergeSortState = initialState, action: AppAction): MergeSortState => {
   switch (action.type) {
@@ -40,12 +76,26 @@ export default (state: MergeSortState = initialState, action: AppAction): MergeS
       return {
         ...state,
         inProgress: true,
+        topList: transformBaseToDisplay(action.payload.list),
       }
     }
-    case 'MERGESORT_UPDATED': {
+    case actionTypes.MERGESORT_UPDATED: {
+      let mergingList = []
+      let isMerged = []
+      if (action.payload.value.isMerging) {
+        mergingList = [...action.payload.value.merged]
+      }
+      if (action.payload.value.isMerged) {
+        isMerged = [...state.isMerged, ...action.payload.value.merged]
+      }
+      const nextTopList = getNextTopList(state, action, mergingList)
       return {
         ...state,
-        sortedList: action.payload.value,
+        left: action.payload.value.left,
+        right: action.payload.value.right,
+        mergingList,
+        isMerged,
+        topList: nextTopList,
       }
     }
     default:

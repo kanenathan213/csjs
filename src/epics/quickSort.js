@@ -34,28 +34,15 @@ const mergeSortEpic = (action$: Observable<AppAction>): Observable<AppAction> =>
   action$
     .ofType('START')
     .filter(({ payload: { algorithmName } }) => algorithmName === algorithmNames.MERGESORT)
-    .switchMap(
-      action => {
-        const gen = mergeSort(action.payload.list)
-        return action$.ofType('NEXT').map(() => {
+    .switchMap(action => {
+      const gen = mergeSort([...action.payload.list])
+      return action$
+        .ofType('NEXT')
+        .map(() => {
           const result = gen.next()
           return { type: 'MERGESORT_UPDATED', payload: result }
         })
-      }
-      //
-      // const { isAutomatic } = action.payload
-      // if (isAutomatic) {
-      //   return Rx.Observable.interval(1000)
-      //     .map(() => {
-      //       const result = gen.next()
-      //       return { type: 'QUICKSORT_SORTING_UPDATED', payload: result }
-      //     })
-      //     .takeWhile(({ payload: { done } }) => !done)
-      // }
-      // return action$.ofType('NEXT').map(() => {
-      //   const result = gen.next()
-      //   return { type: 'QUICKSORT_SORTING_UPDATED', payload: result }
-      // })
-    )
+        .takeWhile(({ payload: { done } }) => !done)
+    })
 
 export default combineEpics(quickSortEpic, mergeSortEpic)

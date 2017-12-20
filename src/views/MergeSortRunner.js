@@ -6,10 +6,11 @@ import { connect } from 'react-redux'
 import { createStartAction, createNextAction } from '../actions'
 import algorithmNames from '../constants/algorithmNames'
 import List from '../components/MergeSortList'
-import { baseListSelector } from '../reducers/list'
 import type { State } from '../reducers/root'
-import { currentSortingListSelector, isInProgressSelector, sortedListSelector } from '../reducers/mergeSort'
+import { baseListSelector } from '../reducers/list'
+import { isInProgressSelector, topListSelector, mergingListSelector } from '../reducers/mergeSort'
 import type { BaseList } from '../types/BaseListItem.js.flow'
+import type { DisplayableMergeSortItem } from '../types/DisplayableMergeSortItem.js.flow'
 
 const StyledButton = styled.button`
   font-size: 2rem;
@@ -26,9 +27,9 @@ const ButtonWrapper = styled.div`
 
 type StateProps = {
   inProgress: boolean,
-  currentSortingList: BaseList,
-  sortedList: BaseList,
-  baseList: BaseList,
+  originalList: BaseList, // eslint-disable-line
+  mergingList: BaseList,
+  topList: Array<DisplayableMergeSortItem>,
 }
 
 type DispatchProps = {
@@ -37,9 +38,9 @@ type DispatchProps = {
 }
 
 const mapStateToProps = (state: State): StateProps => ({
-  baseList: baseListSelector(state),
-  currentSortingList: currentSortingListSelector(state),
-  sortedList: sortedListSelector(state),
+  originalList: baseListSelector(state),
+  mergingList: mergingListSelector(state),
+  topList: topListSelector(state),
   inProgress: isInProgressSelector(state),
 })
 
@@ -52,33 +53,22 @@ const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownPro
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  start: dispatchProps.start(stateProps.baseList),
+  start: dispatchProps.start(stateProps.originalList),
 })
 
-const MergeSortRunner = ({
-  inProgress,
-  currentSortingList,
-  baseList,
-  next,
-  start,
-  sortedList,
-}: StateProps & DispatchProps) => (
+const MergeSortRunner = ({ inProgress, topList, mergingList, next, start }: StateProps & DispatchProps) => (
   <div>
     <hr />
     <h2>Merge sort</h2>
     <ButtonWrapper>
-      <StyledButton onClick={start}>{inProgress ? 'Next' : 'Start'}</StyledButton>
+      <StyledButton onClick={inProgress ? next : start}>{inProgress ? 'Next' : 'Start'}</StyledButton>
     </ButtonWrapper>
-    {inProgress && (
-      <ButtonWrapper>
-        <StyledButton onClick={next}>Next</StyledButton>
-      </ButtonWrapper>
-    )}
-    <List entities={currentSortingList.length > 0 ? currentSortingList : baseList} />
-    <List entities={sortedList} />
+    Base list:
+    <List entities={topList} />
+    Merge: <List entities={mergingList} />
   </div>
 )
 
-const DecoratedQuickSortRunner = connect(mapStateToProps, mapDispatchToProps, mergeProps)(MergeSortRunner)
+const DecoratedMergeSortRunner = connect(mapStateToProps, mapDispatchToProps, mergeProps)(MergeSortRunner)
 
-export default DecoratedQuickSortRunner
+export default DecoratedMergeSortRunner
