@@ -9,6 +9,8 @@ import type { DisplayableMergeSortItem } from '../types/DisplayableMergeSortItem
 
 export type MergeSortState = {
   +inProgress: boolean,
+  +nextOccurred: boolean,
+  +done: boolean,
   +left: BaseList,
   +right: BaseList,
   +mergingList: BaseList,
@@ -23,6 +25,8 @@ export const initialState: MergeSortState = {
   mergingList: [],
   isMerged: [],
   topList: [],
+  nextOccurred: false,
+  done: false,
 }
 
 export const isInProgressSelector = (state: State) => state.mergeSort.inProgress
@@ -31,6 +35,7 @@ export const isMergedSelector = (state: State) => state.mergeSort.isMerged
 export const leftSelector = (state: State) => state.mergeSort.left
 export const rightSelector = (state: State) => state.mergeSort.right
 export const topListSelector = (state: State) => state.mergeSort.topList
+export const mergeSortDoneSelector = (state: State) => state.mergeSort.done
 
 const transformBaseToDisplay = (
   baseList: BaseList | Array<DisplayableMergeSortItem>,
@@ -38,12 +43,12 @@ const transformBaseToDisplay = (
   mergingList?: BaseList
 ): Array<DisplayableMergeSortItem> =>
   baseList.map(item => ({
-      isInLeft: action ? action.payload.value.left.some(leftItem => leftItem.id === item.id) : false,
-      isInRight: action ? action.payload.value.right.some(rightItem => rightItem.id === item.id) : false,
-      value: item.value,
-      id: item.id,
-      isBeingMerged: mergingList ? mergingList.some(mergingItem => mergingItem.id === item.id) : false,
-    }))
+    isInLeft: action ? action.payload.value.left.some(leftItem => leftItem.id === item.id) : false,
+    isInRight: action ? action.payload.value.right.some(rightItem => rightItem.id === item.id) : false,
+    value: item.value,
+    id: item.id,
+    isBeingMerged: mergingList ? mergingList.some(mergingItem => mergingItem.id === item.id) : false,
+  }))
 
 const getNextTopList = (
   state: MergeSortState,
@@ -52,7 +57,6 @@ const getNextTopList = (
 ): Array<DisplayableMergeSortItem> => {
   if (action.payload.value.isMerged) {
     const indexToReinsert = state.topList.findIndex(item => item.isBeingMerged)
-    console.log(indexToReinsert)
     if (indexToReinsert === -1) return transformBaseToDisplay(state.topList, action, mergingList)
     return [
       ...state.topList.slice(0, indexToReinsert),
@@ -79,6 +83,13 @@ export default (state: MergeSortState = initialState, action: AppAction): MergeS
         topList: transformBaseToDisplay(action.payload.list),
       }
     }
+    case actionTypes.NEXT: {
+      return {
+        ...state,
+        nextOccurred: true,
+        done: state.nextOccurred,
+      }
+    }
     case actionTypes.MERGESORT_UPDATED: {
       let mergingList = []
       let isMerged = []
@@ -96,6 +107,7 @@ export default (state: MergeSortState = initialState, action: AppAction): MergeS
         mergingList,
         isMerged,
         topList: nextTopList,
+        nextOccurred: false,
       }
     }
     default:

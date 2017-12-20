@@ -8,7 +8,12 @@ import algorithmNames from '../constants/algorithmNames'
 import List from '../components/MergeSortList'
 import type { State } from '../reducers/root'
 import { baseListSelector } from '../reducers/list'
-import { isInProgressSelector, topListSelector, mergingListSelector } from '../reducers/mergeSort'
+import {
+  isInProgressSelector,
+  topListSelector,
+  mergingListSelector,
+  mergeSortDoneSelector,
+} from '../reducers/mergeSort'
 import type { BaseList } from '../types/BaseListItem.js.flow'
 import type { DisplayableMergeSortItem } from '../types/DisplayableMergeSortItem.js.flow'
 
@@ -27,6 +32,7 @@ const ButtonWrapper = styled.div`
 
 type StateProps = {
   inProgress: boolean,
+  done: boolean,
   originalList: BaseList, // eslint-disable-line
   mergingList: BaseList,
   topList: Array<DisplayableMergeSortItem>,
@@ -42,6 +48,7 @@ const mapStateToProps = (state: State): StateProps => ({
   mergingList: mergingListSelector(state),
   topList: topListSelector(state),
   inProgress: isInProgressSelector(state),
+  done: mergeSortDoneSelector(state),
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<Object>): DispatchProps => ({
@@ -56,16 +63,19 @@ const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownPro
   start: dispatchProps.start(stateProps.originalList),
 })
 
-const MergeSortRunner = ({ inProgress, topList, mergingList, next, start }: StateProps & DispatchProps) => (
+const MergeSortRunner = ({ inProgress, topList, mergingList, next, start, done }: StateProps & DispatchProps) => (
   <div>
     <hr />
     <h2>Merge sort</h2>
-    <ButtonWrapper>
-      <StyledButton onClick={inProgress ? next : start}>{inProgress ? 'Next' : 'Start'}</StyledButton>
-    </ButtonWrapper>
+    {!done && (
+      <ButtonWrapper>
+        <StyledButton onClick={inProgress ? next : start}>{inProgress ? 'Next' : 'Start'}</StyledButton>
+      </ButtonWrapper>
+    )}
     Base list:
     <List entities={topList} />
     Merge: <List entities={mergingList} />
+    {done && <div>Sorted</div>}
   </div>
 )
 

@@ -49,7 +49,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  start: BaseList => ($Keys<typeof algorithmNames>) => any,
+  start: BaseList => ($Keys<typeof algorithmNames>, boolean) => any,
   next: () => any,
   restart: () => any,
   shuffle: () => any,
@@ -96,13 +96,13 @@ class App extends React.Component<*> {
     const { shuffle, add, inProgress } = this.props
     return (
       <AppWrapper>
-        {/* <div>
+        <div>
           <ButtonWrapper>
             {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
             {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
           </ButtonWrapper>
           <QuickSort clickHandler={this.handleClick} />
-        </div> */}
+        </div>
         <div>
           <MergeSort />
         </div>
