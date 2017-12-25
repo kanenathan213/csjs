@@ -3,6 +3,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import type { Dispatch } from 'redux'
 import algorithmNames from './constants/algorithmNames'
 import QuickSort from './views/QuickSortRunner'
@@ -95,18 +96,31 @@ class App extends React.Component<*> {
   render() {
     const { shuffle, add, inProgress } = this.props
     return (
-      <AppWrapper>
-        <div>
-          <ButtonWrapper>
-            {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
-            {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
-          </ButtonWrapper>
-          <QuickSort clickHandler={this.handleClick} />
-        </div>
-        <div>
-          <MergeSort />
-        </div>
-      </AppWrapper>
+      <Router>
+        <AppWrapper>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/quicksort">Quicksort</Link>
+            </li>
+            <li>
+              <Link to="/mergesort">Mergesort</Link>
+            </li>
+          </ul>
+          <div>
+            <ButtonWrapper>
+              {!inProgress && <StyledButton onClick={shuffle}>Shuffle</StyledButton>}
+              {!inProgress && <StyledButton onClick={add}>Add item</StyledButton>}
+            </ButtonWrapper>
+          </div>
+          <div>
+            <Route render={() => <QuickSort clickHandler={this.handleClick} />} path="/quicksort" />
+            <Route component={MergeSort} path="/mergesort" />
+          </div>
+        </AppWrapper>
+      </Router>
     )
   }
 }
