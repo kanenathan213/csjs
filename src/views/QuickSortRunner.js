@@ -24,7 +24,7 @@ const ButtonWrapper = styled.div`
 `
 
 type StateProps = {
-  clickHandler: any => void,
+  clickHandler: (any, ?boolean) => void,
   displayableListData: Array<DisplayableQuickSortItem>,
   pivotIndex: ?number,
   leftIndex: ?number,

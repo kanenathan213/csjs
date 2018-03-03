@@ -32,5 +32,12 @@ module.exports = {
     'arrow-parens': 0,
     'no-mixed-operators': 0,
     quotes: ['error', 'single'],
+    'jsx-a11y/anchor-is-valid': [
+      'error',
+      {
+        components: ['Link'],
+        specialLink: ['to'],
+      },
+    ],
   },
 }

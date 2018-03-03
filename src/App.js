@@ -8,6 +8,7 @@ import type { Dispatch } from 'redux'
 import algorithmNames from './constants/algorithmNames'
 import QuickSort from './views/QuickSortRunner'
 import MergeSort from './views/MergeSortRunner'
+import InsertionSort from './views/InsertionSortRunner'
 import { baseListSelector } from './reducers/list'
 import { isInProgressSelector, isDoneSelector } from './reducers/quickSort'
 import type { State } from './reducers/root'
@@ -106,7 +107,10 @@ class App extends React.Component<*> {
               <Link to="/quicksort">Quicksort</Link>
             </li>
             <li>
-              <Link to="/mergesort">Mergesort</Link>
+              <Link to="/mergesort">Merge sort</Link>
+            </li>
+            <li>
+              <Link to="/insertionsort">Insertion sort</Link>
             </li>
           </ul>
           <div>
@@ -118,6 +122,7 @@ class App extends React.Component<*> {
           <div>
             <Route render={() => <QuickSort clickHandler={this.handleClick} />} path="/quicksort" />
             <Route component={MergeSort} path="/mergesort" />
+            <Route component={InsertionSort} path="/insertionsort" />
           </div>
         </AppWrapper>
       </Router>

@@ -40,8 +40,8 @@ type Props = {
   inProgress: boolean,
 }
 
-class QuickSortList extends React.Component<Props> {
-  renderItems = () => this.props.displayableListData.map(entity => <Item entity={entity} key={entity.id} />)
+class InsertionSortList extends React.Component<Props> {
+  renderItems = () => this.props.entities.map(entity => <Item entity={entity} key={entity.id} />)
 
   renderAnnotations = () =>
     indices.map(currentIndex => {
@@ -79,7 +79,8 @@ class QuickSortList extends React.Component<Props> {
     })
 
   render() {
-    const { displayableListData: entities, pivotIndex, leftIndex, rightIndex, inProgress } = this.props
+    const { entities, pivotIndex, leftIndex, rightIndex, inProgress } = this.props
+    console.log(entities)
     if (!entities) return null
     return (
       <div>
@@ -154,4 +155,4 @@ class QuickSortList extends React.Component<Props> {
   }
 }
 
-export default QuickSortList
+export default InsertionSortList

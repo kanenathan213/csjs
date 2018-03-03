@@ -7,6 +7,7 @@ import algorithmNames from '../constants/algorithmNames'
 import type { AppAction } from '../types/Actions.js.flow'
 import quickSortGenerator from '../algorithms/asGenerators/quickSort'
 import mergeSort from '../algorithms/asGenerators/mergeSort'
+import insertionSort from '../algorithms/asGenerators/insertionSort'
 
 const quickSortEpic = (action$: Observable<AppAction>): Observable<AppAction> =>
   action$
@@ -45,4 +46,20 @@ const mergeSortEpic = (action$: Observable<AppAction>): Observable<AppAction> =>
         .takeWhile(({ payload: { done } }) => !done)
     })
 
-export default combineEpics(quickSortEpic, mergeSortEpic)
+const insertionSortEpic = (action$: Observable<AppAction>): Observable<AppAction> =>
+  action$
+    .ofType('START')
+    .filter(({ payload: { algorithmName } }) => algorithmName === algorithmNames.INSERTIONSORT)
+    .switchMap(action => {
+      console.log(action)
+      const gen = insertionSort([...action.payload.list])
+      return action$
+        .ofType('NEXT')
+        .map(() => {
+          const result = gen.next()
+          return { type: 'INSERTIONSORT_UPDATED', payload: result }
+        })
+        .takeWhile(({ payload: { done } }) => !done)
+    })
+
+export default combineEpics(quickSortEpic, mergeSortEpic, insertionSortEpic)
