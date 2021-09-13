@@ -56,6 +56,6 @@
     "redux-logger": "^3.0.6",
     "rimraf": "^2.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7"
+    "webpack-dev-server": "^4.2.0"
   }
 }
