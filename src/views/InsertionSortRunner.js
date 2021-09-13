@@ -10,7 +10,6 @@ import type { State } from '../reducers/root'
 import { baseListSelector } from '../reducers/list'
 import { currentListSelector, inProgressSelector } from '../reducers/insertionSort'
 import type { BaseList } from '../types/BaseListItem.js.flow'
-import type { DisplayableMergeSortItem } from '../types/DisplayableMergeSortItem.js.flow'
 
 const StyledButton = styled.button`
   font-size: 2rem;
@@ -29,7 +28,6 @@ type StateProps = {
   inProgress: boolean,
   originalList: BaseList, // eslint-disable-line
   currentList: BaseList,
-  baseList: BaseList,
 }
 
 type DispatchProps = {
@@ -48,14 +46,14 @@ const mapDispatchToProps = (dispatch: Dispatch<Object>): DispatchProps => ({
   next: () => dispatch(createNextAction()),
 })
 
-const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: Object) => ({
+const mergeProps = (stateProps: StateProps, dispatchProps: DispatchProps, ownProps: { done: Boolean }) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
   start: dispatchProps.start(stateProps.baseList),
 })
 
-const Runner = ({ inProgress, currentList, next, start, done }: StateProps & DispatchProps) => (
+const Runner = ({ inProgress, currentList, next, start, done }: StateProps & DispatchProps & OwnProps) => (
   <div>
     <hr />
     <h2>Insertion sort</h2>

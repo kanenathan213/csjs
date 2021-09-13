@@ -31,6 +31,7 @@ module.exports = {
     'generator-star-spacing': 0,
     'arrow-parens': 0,
     'no-mixed-operators': 0,
+    'import/prefer-default-export': 0,
     quotes: ['error', 'single'],
     'jsx-a11y/anchor-is-valid': [
       'error',

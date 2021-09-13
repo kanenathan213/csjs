@@ -5,8 +5,8 @@ import type { QuickSortGeneratorIOValue } from '../../types/QuickSortGeneratorIO
 
 function swap(items, leftIndex, rightIndex) {
   const temp = items[leftIndex]
-  items[leftIndex] = items[rightIndex]
-  items[rightIndex] = temp
+  items[leftIndex] = items[rightIndex]  // eslint-disable-line no-param-reassign
+  items[rightIndex] = temp // eslint-disable-line no-param-reassign
 }
 
 type NextValue = {
@@ -50,7 +50,6 @@ function* partition(items, leftIndexArg, rightIndexArg): Generator<QuickSortGene
     }
 
     if (i <= j) {
-      console.log('swapping')
       swap(items, i, j)
       yield {
         items,
@@ -93,7 +92,7 @@ type QuickSortArgs = {
 }
 
 function* quickSort(
-  args: QuickSortArgs
+  args: QuickSortArgs,
 ): Generator<QuickSortGeneratorIOValue, QuickSortGeneratorIOValue, QuickSortGeneratorIOValue> {
   const { items, leftIndexArg, rightIndexArg } = args
   let index
@@ -103,7 +102,6 @@ function* quickSort(
   if (items.length > 1) {
     index = yield* partition(items, leftIndex, rightIndex)
     if (leftIndex < index - 1) {
-      console.log('sorting left section')
       yield* quickSort({
         items,
         leftIndexArg: leftIndex,
@@ -112,7 +110,6 @@ function* quickSort(
     }
 
     if (index < rightIndex) {
-      console.log('sorting right section')
       yield* quickSort({
         items,
         leftIndexArg: index,

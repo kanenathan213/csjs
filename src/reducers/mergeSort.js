@@ -40,7 +40,7 @@ export const mergeSortDoneSelector = (state: State) => state.mergeSort.done
 const transformBaseToDisplay = (
   baseList: BaseList | Array<DisplayableMergeSortItem>,
   action?: MergeSortUpdatedAction,
-  mergingList?: BaseList
+  mergingList?: BaseList,
 ): Array<DisplayableMergeSortItem> =>
   baseList.map(item => ({
     isInLeft: action ? action.payload.value.left.some(leftItem => leftItem.id === item.id) : false,
@@ -53,7 +53,7 @@ const transformBaseToDisplay = (
 const getNextTopList = (
   state: MergeSortState,
   action: MergeSortUpdatedAction,
-  mergingList: BaseList
+  mergingList: BaseList,
 ): Array<DisplayableMergeSortItem> => {
   if (action.payload.value.isMerged) {
     const indexToReinsert = state.topList.findIndex(item => item.isBeingMerged)

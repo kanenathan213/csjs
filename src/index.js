@@ -22,13 +22,13 @@ const middleware = [logger, epicMiddleware]
 const store = createStore(
   rootReducer(),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), // eslint-disable-line
-  applyMiddleware(...middleware)
+  applyMiddleware(...middleware),
 )
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  global.document.getElementById('root')
+  global.document.getElementById('root'),
 )
 registerServiceWorker()

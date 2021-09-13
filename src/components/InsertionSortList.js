@@ -38,6 +38,7 @@ type Props = {
   leftIndex: ?number,
   rightIndex: ?number,
   inProgress: boolean,
+  entities: any
 }
 
 class InsertionSortList extends React.Component<Props> {
@@ -80,7 +81,6 @@ class InsertionSortList extends React.Component<Props> {
 
   render() {
     const { entities, pivotIndex, leftIndex, rightIndex, inProgress } = this.props
-    console.log(entities)
     if (!entities) return null
     return (
       <div>

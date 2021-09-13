@@ -51,7 +51,6 @@ const insertionSortEpic = (action$: Observable<AppAction>): Observable<AppAction
     .ofType('START')
     .filter(({ payload: { algorithmName } }) => algorithmName === algorithmNames.INSERTIONSORT)
     .switchMap(action => {
-      console.log(action)
       const gen = insertionSort([...action.payload.list])
       return action$
         .ofType('NEXT')

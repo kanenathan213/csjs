@@ -14,7 +14,7 @@ const selector: (state: State) => Array<DisplayableQuickSortItem> = createSelect
   (
     currentSortingList: Array<BaseListItem>,
     baseList,
-    { leftIndex, rightIndex, pivotIndex }
+    { leftIndex, rightIndex, pivotIndex },
   ): Array<DisplayableQuickSortItem> => {
     const listToUse = currentSortingList.length > 0 ? currentSortingList : baseList
     return listToUse.map((item, index) => ({
@@ -24,7 +24,7 @@ const selector: (state: State) => Array<DisplayableQuickSortItem> = createSelect
       datum: item.value,
       id: item.id,
     }))
-  }
+  },
 )
 
 export default selector

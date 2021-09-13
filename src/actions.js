@@ -24,7 +24,7 @@ export const createShuffleAction = (): ShuffleAction => ({
 export const createStartAction = (
   algorithmName: AlgorithNames,
   list: BaseList,
-  isAutomatic: ?boolean
+  isAutomatic: ?boolean,
 ): StartAction => ({
   type: actionTypes.START,
   payload: {
